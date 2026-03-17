@@ -1,199 +1,405 @@
-# Paper Pulse 3.0
-
 <div align="center">
 
-**AI 驱动的学术论文发现与研究助手**
+# Paper Pulse
 
-[English](./README.md) · [中文](./README_ZH.md)
+### AI 驱动的学术论文助手
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+*发现、阅读、理解学术论文的全新方式*
+
+---
+
+<p align="center">
+  <a href="https://github.com/Otter-Knight/paper-pulse">
+    <img src="https://img.shields.io/badge/⭐-Star_on_GitHub-FFFFFF?style=for-the-badge&logo=github" alt="Star">
+  </a>
+  <a href="https://nextjs.org">
+    <img src="https://img.shields.io/badge/Built_with-Next.js-000000?style=for-the-badge&logo=next.js" alt="Next.js">
+  </a>
+  <a href="https://www.typescriptlang.org">
+    <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript">
+  </a>
+</p>
 
 </div>
 
 ---
 
-## 功能特性
+<br>
 
-| 功能 | 描述 |
-|------|------|
-| 📚 **论文发现** | 浏览 arXiv 和 OpenReview 的论文，智能筛选 |
-| 🎯 **个性化推荐** | 基于偏好标签卡的 AI 驱动的论文推荐 |
-| 🤖 **AI 助手** | 与论文对话，获取 AI 摘要和解析 |
-| 📖 **个人文库** | 保存论文，高亮和批注功能 |
-| ✨ **每日运势** | 每日科研运势系统，助力科研心情 |
-| 🏷️ **智能标签** | 用自然语言创建最多 10 个偏好标签卡 |
+<div align="center">
+
+## 从此，科研不再孤单。
+
+<div style="
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24px;
+  padding: 48px 32px;
+  margin: 32px 0;
+  color: white;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+">
+
+  <h2 style="
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.5px;
+  ">
+    每一天，全球数千篇论文发表
+  </h2>
+
+  <p style="
+    font-size: 16px;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.6;
+  ">
+    面对信息洪流，你是否也曾感到迷失？<br>
+    Paper Pulse，应运而生。<br>
+    不是简单的文献管理器，而是你科研路上的<br>
+    <strong>智能伙伴</strong>与<strong>灵感缪斯</strong>。
+  </p>
+
+</div>
+
+</div>
 
 ---
 
+<br>
+
+<div align="center">
+
+## 功能亮点
+
+</div>
+
+<div style="
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+">
+
+<!-- 论文发现 -->
+<div style="
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">📚</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+  ">论文发现</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    汇聚 <strong>arXiv</strong> 与 <strong>OpenReview</strong> 的海量论文，
+    配合智能筛选，让每一篇与你相关的文献，自动浮现眼前。
+  </p>
+</div>
+
+<!-- 个性化推荐 -->
+<div style="
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">🎯</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+  ">个性化推荐</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    用自然语言描述你的研究兴趣，AI 将为你生成专属的
+    <strong>偏好标签卡</strong>。从此，论文推荐不再是冰冷的算法，而是懂你的学术知己。
+  </p>
+</div>
+
+<!-- AI 助手 -->
+<div style="
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 20px;
+  padding: 32px;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 20px 40px rgba(245, 87, 108, 0.25);
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">🤖</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+  ">AI 助手</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    无需通读全文，直接向论文提问。<br>
+    从晦涩的公式到核心观点，<br>
+    <strong>一切答案，触手可及</strong>。
+  </p>
+</div>
+
+<!-- 个人文库 -->
+<div style="
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">📖</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+  ">个人文库</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    精心收藏的论文，智能划分为<strong>精读区</strong>与<strong>速读区</strong>。
+    高亮、批注，让你的思考留下痕迹。
+  </p>
+</div>
+
+<!-- 每日运势 -->
+<div style="
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border-radius: 20px;
+  padding: 32px;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 20px 40px rgba(254, 225, 64, 0.25);
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">✨</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin: 0 0 12px 0;
+  ">每日运势</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(26, 26, 46, 0.8);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    科研路上偶尔需要一点小确幸。<br>
+    每日抽一支<strong>科研运势签</strong>，<br>
+    或许灵感和好心情，就此降临。
+  </p>
+</div>
+
+<!-- 智能标签 -->
+<div style="
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+">
+  <div style="font-size: 40px; margin-bottom: 16px;">🏷️</div>
+  <h3 style="
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 12px 0;
+  ">智能标签</h3>
+  <p style="
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin: 0;
+  ">
+    用自然语言描述你的研究方向，AI 智能生成细分的候选词。
+    最多可创建 <strong>10 个偏好标签卡</strong>，精准锁定你关心的每一篇论文。
+  </p>
+</div>
+
+</div>
+
+---
+
+<br>
+
+<div align="center">
+
+## 技术架构
+
+<div style="
+  background: #0f0f23;
+  border-radius: 20px;
+  padding: 40px;
+  margin: 24px 0;
+  display: inline-block;
+">
+
+<div style="
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+">
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">⚡</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">Next.js 16</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">App Router</div>
+</div>
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">🛡️</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">TypeScript</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">Strict Mode</div>
+</div>
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">🎨</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">Tailwind CSS</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">Shadcn/UI</div>
+</div>
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">🧠</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">OpenAI API</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">GPT-4</div>
+</div>
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">💾</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">Supabase</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">PostgreSQL</div>
+</div>
+
+<div style="text-align: center;">
+  <div style="font-size: 48px;">📦</div>
+  <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 8px;">Zustand</div>
+  <div style="color: rgba(255,255,255,0.4); font-size: 12px;">状态管理</div>
+</div>
+
+</div>
+
+<div style="
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+">
+  Powered by <strong style="color: #fff;">Vercel AI SDK</strong> · 流式响应 · 服务端 Actions
+</div>
+
+</div>
+
+</div>
+
+---
+
+<br>
+
+<div align="center">
+
 ## 快速开始
 
-### 环境要求
-
-- Node.js 18.17+
-- npm / yarn / pnpm / bun
-
-### 安装部署
+</div>
 
 ```bash
-# 克隆仓库
+# 克隆项目
 git clone https://github.com/Otter-Knight/paper-pulse.git
 cd paper-pulse
 
 # 安装依赖
 npm install
 
-# 复制环境变量模板
+# 复制环境配置
 cp .env.example .env
 
 # 启动开发服务器
 npm run dev
 ```
 
-在浏览器中打开 [http://localhost:3000](http://localhost:3000)。
+<div style="
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 12px;
+  padding: 20px 32px;
+  margin: 24px 0;
+  display: inline-block;
+">
+  <span style="color: rgba(255,255,255,0.7);">
+    🧪 开发模式下，无需数据库配置，默认使用本地模拟数据
+  </span>
+</div>
 
 ---
 
-## 环境变量配置
-
-在项目根目录创建 `.env` 文件：
-
-```env
-# 必需 - OpenAI API 密钥（用于 AI 聊天和摘要）
-OPENAI_API_KEY="sk-your-openai-key"
-
-# 必需 - Supabase 配置
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-
-# 可选 - Anthropic API（用于 Claude）
-ANTHROPIC_API_KEY=""
-
-# 可选 - 定时任务安全令牌
-CRON_SECRET="your-random-secret"
-
-# 开发模式（设为 "true" 使用模拟数据）
-USE_MOCK_DATA="true"
-```
-
-> **提示：** 设置 `USE_MOCK_DATA="true"` 可在无需数据库的情况下进行测试。
-
----
-
-## 部署上线
-
-### Vercel（推荐）
-
-1. 将代码推送到 GitHub
-2. 在 [Vercel](https://vercel.com) 导入项目
-3. 配置环境变量
-4. 部署完成
-
-```bash
-# 或使用 CLI 部署
-npm i -g vercel
-vercel
-```
-
-### Docker 部署
-
-```dockerfile
-# 构建镜像
-docker build -t paper-pulse .
-
-# 运行容器
-docker run -p 3000:3000 --env-file .env paper-pulse
-```
-
-### 其他平台
-
-- **Railway**: `npx vercel deploy --prod`
-- **Render**: 从 GitHub 部署，构建命令填 `npm run build`，启动命令填 `npm start`
-- **Netlify**: 从 GitHub 导入，默认配置即可直接使用
-
----
-
-## 技术栈
+<br>
 
 <div align="center">
 
-```
-┌─────────────────────────────────────────────┐
-│  前端                                       │
-│  ┌─────────┐ ┌─────────┐ ┌──────────────┐ │
-│  │ Next.js │ │ React   │ │ Tailwind CSS │ │
-│  │ 16      │ │ 18      │ │ 3.x          │ │
-│  └─────────┘ └─────────┘ └──────────────┘ │
-│                                             │
-│  ┌─────────┐ ┌─────────┐ ┌──────────────┐ │
-│  │ Zustand │ │ Lucide  │ │ Vercel AI    │ │
-│  │         │ │ Icons   │ │ SDK          │ │
-│  └─────────┘ └─────────┘ └──────────────┘ │
-│                                             │
-│  后端                                       │
-│  ┌─────────┐ ┌─────────┐ ┌──────────────┐ │
-│  │ Prisma  │ │ Supabase│ │ OpenAI API   │ │
-│  │         │ │ (PostgreS│ │              │ │
-│  └─────────┘ └─────────┘ └──────────────┘ │
-└─────────────────────────────────────────────┘
-```
+## 开启你的科研新体验
+
+<div style="
+  margin: 32px 0;
+">
+  <a href="https://github.com/Otter-Knight/paper-pulse/fork" style="
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+  ">
+    ⭐ Star on GitHub
+  </a>
+</div>
+
+<p style="
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  margin-top: 24px;
+">
+  Made with ❤️ by <a href="https://github.com/Otter-Knight" style="color: #667eea;">Otter-Knight</a>
+</p>
 
 </div>
 
 ---
 
-## 项目结构
-
-```
-paper-pulse/
-├── app/                    # Next.js App Router
-│   ├── page.tsx           # 首页 - 论文发现
-│   ├── feed/              # 个性化推荐
-│   ├── library/           # 个人文库
-│   ├── paper/[id]/       # 论文详情
-│   └── api/               # API 路由
-├── components/            # React 组件
-│   ├── preference-builder.tsx
-│   ├── paper-card.tsx
-│   ├── fortune-checkin.tsx
-│   └── ...
-├── lib/                   # 工具函数和状态管理
-│   ├── actions.ts         # 服务端 actions
-│   ├── preference-store.ts
-│   └── ...
-└── public/               # 静态资源
-```
-
----
-
-## 开发命令
-
-```bash
-# 开发模式
-npm run dev
-
-# 构建生产版本
-npm run build
-
-# 代码检查
-npm run lint
-
-# 类型检查
-npx tsc --noEmit
-```
-
----
-
-## 开源协议
-
-MIT License - 详见 [LICENSE](LICENSE)。
-
----
-
 <div align="center">
 
-**如果觉得这个项目对你有帮助，欢迎在 [GitHub](https://github.com/Otter-Knight/paper-pulse) 上给我们点个 Star！**
+<p style="color: rgba(255,255,255,0.3); font-size: 12px;">
+  LICENSE: MIT · Paper Pulse © 2024
+</p>
 
 </div>
