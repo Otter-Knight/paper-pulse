@@ -6,9 +6,9 @@ import { PaperContentTabs } from "@/components/paper-content-tabs";
 import { ChatInterface } from "@/components/chat-interface";
 import { RelatedPapers } from "@/components/related-papers";
 import { useReadHistoryStore } from "@/lib/read-history";
-import { useLibraryStore } from "@/lib/library-store";
+import { useLibraryStore, PaperZone } from "@/lib/library-store";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, FileText, Calendar, User, Tag, Bookmark, BookmarkCheck } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Calendar, User, Tag, Bookmark, BookmarkCheck, BookOpenCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ export function PaperPageClient({ paper }: PaperPageClientProps) {
   const { addToLibrary, removeFromLibrary, isInLibrary } = useLibraryStore();
   const [allPapers, setAllPapers] = useState<Paper[]>([]);
   const [isSaved, setIsSaved] = useState(false);
+  const [showZoneSelector, setShowZoneSelector] = useState(false);
 
   // Mark paper as read when viewed
   useEffect(() => {
@@ -124,45 +125,85 @@ export function PaperPageClient({ paper }: PaperPageClientProps) {
               {/* Links */}
               <div className="pt-3 border-t border-border space-y-2">
                 {/* Save to Library Button */}
-                <button
-                  onClick={() => {
-                    if (isSaved) {
-                      removeFromLibrary(paper.id);
-                      setIsSaved(false);
-                    } else {
-                      addToLibrary({
-                        id: paper.id,
-                        title: paper.title,
-                        authors: paper.authors,
-                        abstract: paper.abstract || "",
-                        source: paper.source as "arxiv" | "openreview",
-                        sourceUrl: paper.sourceUrl || "",
-                        pdfUrl: paper.pdfUrl || "",
-                        tags: paper.tags,
-                        highlights: paper.highlights,
-                        publishedAt: paper.publishedAt ? paper.publishedAt.toString() : "",
-                      });
-                      setIsSaved(true);
-                    }
-                  }}
-                  className={`flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded-md transition-colors text-xs font-medium ${
-                    isSaved
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-primary/10 text-primary hover:bg-primary/20"
-                  }`}
-                >
-                  {isSaved ? (
-                    <>
-                      <BookmarkCheck className="h-3.5 w-3.5" />
-                      已收藏
-                    </>
-                  ) : (
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      if (isSaved) {
+                        removeFromLibrary(paper.id);
+                        setIsSaved(false);
+                      } else {
+                        setShowZoneSelector(!showZoneSelector);
+                      }
+                    }}
+                    className={`flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded-md transition-colors text-xs font-medium ${
+                      isSaved
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-primary/10 text-primary hover:bg-primary/20"
+                    }`}
+                  >
+                    {isSaved ? (
+                      <>
+                        <BookmarkCheck className="h-3.5 w-3.5" />
+                        已收藏
+                      </>
+                    ) : (
                     <>
                       <Bookmark className="h-3.5 w-3.5" />
                       收藏
                     </>
                   )}
                 </button>
+
+                {/* Zone Selector Dropdown */}
+                {showZoneSelector && !isSaved && (
+                  <div className="absolute left-0 right-0 mt-1 z-10 bg-background border border-border rounded-md shadow-lg py-1">
+                    <button
+                      onClick={() => {
+                        addToLibrary({
+                          id: paper.id,
+                          title: paper.title,
+                          authors: paper.authors,
+                          abstract: paper.abstract || "",
+                          source: paper.source as "arxiv" | "openreview",
+                          sourceUrl: paper.sourceUrl || "",
+                          pdfUrl: paper.pdfUrl || "",
+                          tags: paper.tags,
+                          highlights: paper.highlights,
+                          publishedAt: paper.publishedAt ? paper.publishedAt.toString() : "",
+                        }, "deep");
+                        setIsSaved(true);
+                        setShowZoneSelector(false);
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-accent text-left"
+                    >
+                      <BookOpenCheck className="h-3.5 w-3.5 text-amber-500" />
+                      精读区
+                    </button>
+                    <button
+                      onClick={() => {
+                        addToLibrary({
+                          id: paper.id,
+                          title: paper.title,
+                          authors: paper.authors,
+                          abstract: paper.abstract || "",
+                          source: paper.source as "arxiv" | "openreview",
+                          sourceUrl: paper.sourceUrl || "",
+                          pdfUrl: paper.pdfUrl || "",
+                          tags: paper.tags,
+                          highlights: paper.highlights,
+                          publishedAt: paper.publishedAt ? paper.publishedAt.toString() : "",
+                        }, "quick");
+                        setIsSaved(true);
+                        setShowZoneSelector(false);
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-accent text-left"
+                    >
+                      <Zap className="h-3.5 w-3.5 text-blue-500" />
+                      速读区
+                    </button>
+                  </div>
+                )}
+                </div>
 
                 {paper.pdfUrl && (
                   <a

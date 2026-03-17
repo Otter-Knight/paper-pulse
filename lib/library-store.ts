@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export type PaperZone = "deep" | "quick"; // 精读区 | 速读区
+
 export interface SavedPaper {
   id: string;
   title: string;
@@ -13,6 +15,7 @@ export interface SavedPaper {
   highlights: string[];
   publishedAt: string;
   savedAt: string;
+  zone: PaperZone;
   notes: PaperNote[];
 }
 
@@ -26,13 +29,16 @@ export interface PaperNote {
 
 interface LibraryStore {
   savedPapers: SavedPaper[];
-  addToLibrary: (paper: Omit<SavedPaper, "savedAt" | "notes">) => void;
+  addToLibrary: (paper: Omit<SavedPaper, "savedAt" | "notes" | "zone">, zone?: PaperZone) => void;
   removeFromLibrary: (paperId: string) => void;
+  moveToZone: (paperId: string, zone: PaperZone) => void;
   addNote: (paperId: string, note: Omit<PaperNote, "id" | "createdAt">) => void;
   updateNote: (paperId: string, noteId: string, content: string) => void;
   deleteNote: (paperId: string, noteId: string) => void;
   isInLibrary: (paperId: string) => boolean;
+  isInZone: (paperId: string, zone: PaperZone) => boolean;
   getPaperById: (paperId: string) => SavedPaper | undefined;
+  getPapersByZone: (zone: PaperZone) => SavedPaper[];
 }
 
 export const useLibraryStore = create<LibraryStore>()(
@@ -40,12 +46,13 @@ export const useLibraryStore = create<LibraryStore>()(
     (set, get) => ({
       savedPapers: [],
 
-      addToLibrary: (paper) => {
+      addToLibrary: (paper, zone = "deep") => {
         set((state) => ({
           savedPapers: [
             {
               ...paper,
               savedAt: new Date().toISOString(),
+              zone,
               notes: [],
             },
             ...state.savedPapers,
@@ -56,6 +63,14 @@ export const useLibraryStore = create<LibraryStore>()(
       removeFromLibrary: (paperId) => {
         set((state) => ({
           savedPapers: state.savedPapers.filter((p) => p.id !== paperId),
+        }));
+      },
+
+      moveToZone: (paperId, zone) => {
+        set((state) => ({
+          savedPapers: state.savedPapers.map((p) =>
+            p.id === paperId ? { ...p, zone } : p
+          ),
         }));
       },
 
@@ -111,8 +126,17 @@ export const useLibraryStore = create<LibraryStore>()(
         return get().savedPapers.some((p) => p.id === paperId);
       },
 
+      isInZone: (paperId, zone) => {
+        const paper = get().savedPapers.find((p) => p.id === paperId);
+        return paper?.zone === zone;
+      },
+
       getPaperById: (paperId) => {
         return get().savedPapers.find((p) => p.id === paperId);
+      },
+
+      getPapersByZone: (zone) => {
+        return get().savedPapers.filter((p) => p.zone === zone);
       },
     }),
     {

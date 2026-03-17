@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { FileText, ExternalLink, BookOpen, Bookmark, BookmarkCheck } from "lucide-react";
+import { FileText, ExternalLink, BookOpen, Bookmark, BookmarkCheck, BookOpenCheck, Zap } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Paper } from "@/lib/actions";
 import { formatDateShort, truncateText } from "@/lib/utils";
-import { useLibraryStore } from "@/lib/library-store";
+import { useLibraryStore, PaperZone } from "@/lib/library-store";
 
 interface PaperCardProps {
   paper: Paper;
@@ -18,8 +18,9 @@ interface PaperCardProps {
 export function PaperCard({ paper, index = 0 }: PaperCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [showZoneSelector, setShowZoneSelector] = useState(false);
 
-  const { addToLibrary, removeFromLibrary, isInLibrary } = useLibraryStore();
+  const { addToLibrary, removeFromLibrary, isInLibrary, isInZone } = useLibraryStore();
 
   useEffect(() => {
     setIsSaved(isInLibrary(paper.id));
@@ -30,21 +31,27 @@ export function PaperCard({ paper, index = 0 }: PaperCardProps) {
     e.stopPropagation();
     if (isSaved) {
       removeFromLibrary(paper.id);
+      setShowZoneSelector(false);
     } else {
-      addToLibrary({
-        id: paper.id,
-        title: paper.title,
-        authors: paper.authors,
-        abstract: paper.abstract || "",
-        source: paper.source as "arxiv" | "openreview",
-        sourceUrl: paper.sourceUrl || "",
-        pdfUrl: paper.pdfUrl || "",
-        tags: paper.tags,
-        highlights: paper.highlights,
-        publishedAt: paper.publishedAt ? paper.publishedAt.toString() : "",
-      });
+      setShowZoneSelector(!showZoneSelector);
     }
-    setIsSaved(!isSaved);
+  };
+
+  const handleSaveToZone = (zone: PaperZone) => {
+    addToLibrary({
+      id: paper.id,
+      title: paper.title,
+      authors: paper.authors,
+      abstract: paper.abstract || "",
+      source: paper.source as "arxiv" | "openreview",
+      sourceUrl: paper.sourceUrl || "",
+      pdfUrl: paper.pdfUrl || "",
+      tags: paper.tags,
+      highlights: paper.highlights,
+      publishedAt: paper.publishedAt ? paper.publishedAt.toString() : "",
+    }, zone);
+    setIsSaved(true);
+    setShowZoneSelector(false);
   };
 
   // Extract venue from source URL (e.g., arxiv:2401.12345 -> arXiv:2401.12345)
@@ -86,19 +93,40 @@ export function PaperCard({ paper, index = 0 }: PaperCardProps) {
                 {formatDateShort(new Date(paper.publishedAt))}
               </span>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
-              onClick={handleSaveToggle}
-              title={isSaved ? "Remove from library" : "Save to library"}
-            >
-              {isSaved ? (
-                <BookmarkCheck className="h-4 w-4 text-primary" />
-              ) : (
-                <Bookmark className="h-4 w-4" />
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={handleSaveToggle}
+                title={isSaved ? "Remove from library" : "Save to library"}
+              >
+                {isSaved ? (
+                  <BookmarkCheck className="h-4 w-4 text-primary" />
+                ) : (
+                  <Bookmark className="h-4 w-4" />
+                )}
+              </Button>
+              {/* Zone Selector Dropdown */}
+              {showZoneSelector && !isSaved && (
+                <div className="absolute right-0 top-full mt-1 z-10 bg-background border border-border rounded-md shadow-lg py-1 min-w-[120px]">
+                  <button
+                    onClick={() => handleSaveToZone("deep")}
+                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-accent text-left"
+                  >
+                    <BookOpenCheck className="h-3.5 w-3.5 text-amber-500" />
+                    精读区
+                  </button>
+                  <button
+                    onClick={() => handleSaveToZone("quick")}
+                    className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-accent text-left"
+                  >
+                    <Zap className="h-3.5 w-3.5 text-blue-500" />
+                    速读区
+                  </button>
+                </div>
               )}
-            </Button>
+            </div>
           </div>
         </div>
         <Link href={`/paper/${paper.id}`} className="group">
