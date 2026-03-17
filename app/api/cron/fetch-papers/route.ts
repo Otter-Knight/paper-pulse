@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { XMLParser } from "fast-xml-parser";
 
 const USE_MOCK_DATA = process.env.USE_MOCK_DATA === "true";
 
@@ -16,6 +17,10 @@ async function fetchArxivPapers(): Promise<ArxivEntry[]> {
   const categories = ["cs.CL", "cs.LG", "cs.AI", "cs.NE", "stat.ML"];
   const maxResults = 10;
   const papers: ArxivEntry[] = [];
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_"
+  });
 
   for (const category of categories) {
     try {
@@ -28,19 +33,26 @@ async function fetchArxivPapers(): Promise<ArxivEntry[]> {
       }
 
       const xmlText = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(xmlText, "text/xml");
-      const entries = doc.querySelectorAll("entry");
+      const result = parser.parse(xmlText);
+      const entries = Array.isArray(result.feed.entry) ? result.feed.entry : [result.feed.entry].filter(Boolean);
 
-      entries.forEach((entry) => {
-        const id = entry.querySelector("id")?.textContent?.replace("http://arxiv.org/abs/", "") || "";
-        const title = entry.querySelector("title")?.textContent?.replace(/\n/g, " ").trim() || "";
-        const abstract = entry.querySelector("summary")?.textContent?.replace(/\n/g, " ").trim() || "";
-        const published = entry.querySelector("published")?.textContent || "";
-        const authorElements = entry.querySelectorAll("author name");
-        const authors = Array.from(authorElements).map((a) => a.textContent || "");
+      entries.forEach((entry: any) => {
+        const id = (entry.id || "").replace("http://arxiv.org/abs/", "");
+        const title = (entry.title || "").replace(/\n/g, " ").trim();
+        const abstract = (entry.summary || "").replace(/\n/g, " ").trim();
+        const published = entry.published || "";
 
-        const pdfLink = entry.querySelector("link[title='pdf']")?.getAttribute("href") || "";
+        const authors = Array.isArray(entry.author)
+          ? entry.author.map((a: any) => a.name || "")
+          : [];
+
+        // Find PDF link
+        let pdfUrl = "";
+        const links = Array.isArray(entry.link) ? entry.link : [entry.link].filter(Boolean);
+        const pdfLink = links.find((l: any) => l["@_title"] === "pdf");
+        if (pdfLink) {
+          pdfUrl = pdfLink["@_href"] || "";
+        }
 
         papers.push({
           id,
@@ -48,7 +60,7 @@ async function fetchArxivPapers(): Promise<ArxivEntry[]> {
           authors,
           abstract,
           published,
-          pdfUrl: pdfLink,
+          pdfUrl,
         });
       });
     } catch (error) {
