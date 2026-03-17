@@ -17,18 +17,23 @@ export function FortuneCalendar({ checkInDates }: FortuneCalendarProps) {
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Get check-in dates for current month
-  const checkInSet = useMemo(() => {
+  // Get unique dates from check-in history
+  const uniqueDates = useMemo(() => {
     return new Set(checkInDates.map(d => d.split('T')[0]));
   }, [checkInDates]);
 
-  // Calculate stats
+  // Get check-in dates for current month (unique)
+  const checkInSet = useMemo(() => {
+    return uniqueDates;
+  }, [uniqueDates]);
+
+  // Calculate stats - count unique dates
   const currentMonthCheckIns = useMemo(() => {
     const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-    return checkInDates.filter(d => d.startsWith(monthStr)).length;
-  }, [checkInDates, year, month]);
+    return Array.from(uniqueDates).filter(d => d.startsWith(monthStr)).length;
+  }, [uniqueDates, year, month]);
 
-  const totalCheckIns = checkInDates.length;
+  const totalCheckIns = uniqueDates.size;
 
   const goToPrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -65,7 +70,8 @@ export function FortuneCalendar({ checkInDates }: FortuneCalendarProps) {
         background: "linear-gradient(145deg, #faf8f5 0%, #f5f0eb 100%)",
         borderRadius: "28px",
         boxShadow: "0 8px 32px rgba(139, 92, 70, 0.12), 0 2px 8px rgba(139, 92, 70, 0.08)",
-        padding: "24px"
+        padding: "24px",
+        minHeight: "380px"
       }}
     >
       {/* Header */}

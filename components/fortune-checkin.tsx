@@ -172,7 +172,9 @@ export function FortuneCheckIn() {
       localStorage.setItem("fortune_checkin_date", new Date().toDateString());
       localStorage.setItem("fortune_result", JSON.stringify(newFortune));
 
-      const newDates = [...checkInDates, today];
+      // Use Set to ensure unique dates only
+      const uniqueDates = new Set([...checkInDates, today]);
+      const newDates = Array.from(uniqueDates);
       setCheckInDates(newDates);
       localStorage.setItem("fortune_checkin_dates", JSON.stringify(newDates));
     }, 2500);
@@ -203,7 +205,8 @@ export function FortuneCheckIn() {
               background: "linear-gradient(145deg, #faf8f5 0%, #f5f0eb 100%)",
               borderRadius: "28px",
               boxShadow: "0 8px 32px rgba(139, 92, 70, 0.12), 0 2px 8px rgba(139, 92, 70, 0.08)",
-              padding: "40px 32px"
+              padding: "40px 32px",
+              minHeight: "380px"
             }}
           >
             {/* Decorative elements */}
