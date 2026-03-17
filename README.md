@@ -251,6 +251,93 @@
 
 <div align="center">
 
+## Deep Reading & Export
+
+<div style="
+  background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+  border-radius: 24px;
+  padding: 40px;
+  margin: 24px 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+">
+
+### 💭 Let Your Thoughts Be Remembered
+
+<p style="color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.8; margin-bottom: 32px;">
+  Every research paper is a conversation with knowledge.<br/>
+  Those flashes of insight deserve to be captured with care.
+</p>
+
+---
+
+#### 📝 Immersive Annotations
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+
+<div>
+  <p style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; margin-bottom: 8px;">
+    🎨 Five Colors
+  </p>
+  <p style="color: rgba(255,255,255,0.5); font-size: 13px;">
+    Yellow, Pink, Blue, Green, Purple<br/>
+    Color-code your thoughts
+  </p>
+</div>
+
+<div>
+  <p style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; margin-bottom: 8px;">
+    📍 Position Tags
+  </p>
+  <p style="color: rgba(255,255,255,0.5); font-size: 13px;">
+    Beginning · End<br/>
+    Pinpoint your insights
+  </p>
+</div>
+
+</div>
+
+---
+
+#### 💡 Reading Summary
+
+<p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 24px;">
+  A dedicated space to capture the core ideas and your reflections
+</p>
+
+---
+
+#### 📤 Export — Your Choice, Your Control
+
+<div style="
+  background: rgba(0,0,0,0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+">
+
+| Option | Description |
+|:---:|:---|
+| 🔘 **Pure Version** | Export paper only, no annotations |
+| ✅ **Full Version** | Notes + Summary, all included |
+
+<p style="color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 16px; text-align: center;">
+  Elegant toggle options at export<br/>
+  Preserve the original paper, yet keep your thinking
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+<br>
+
+<div align="center">
+
 ## Architecture
 
 ```mermaid

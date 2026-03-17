@@ -250,6 +250,93 @@
 
 <div align="center">
 
+## 深度阅读与自由导出
+
+<div style="
+  background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+  border-radius: 24px;
+  padding: 40px;
+  margin: 24px 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+">
+
+### 💭 让思考，有迹可循
+
+<p style="color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.8; margin-bottom: 32px;">
+  在科研路上，每一篇论文都是一次与知识的对话。<br/>
+  那些灵光一现的想法，值得被认真记录。
+</p>
+
+---
+
+#### 📝 沉浸式批注
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+
+<div>
+  <p style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; margin-bottom: 8px;">
+    🎨 五色灵感
+  </p>
+  <p style="color: rgba(255,255,255,0.5); font-size: 13px;">
+    黄、粉、蓝、绿、紫<br/>
+    用颜色标记思考的层次
+  </p>
+</div>
+
+<div>
+  <p style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500; margin-bottom: 8px;">
+    📍 位置标注
+  </p>
+  <p style="color: rgba(255,255,255,0.5); font-size: 13px;">
+    开头 · 结尾<br/>
+    精准定位你的想法
+  </p>
+</div>
+
+</div>
+
+---
+
+#### 💡 读后总结
+
+<p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 24px;">
+  专属区域，记录整篇论文的核心观点与你的思考沉淀
+</p>
+
+---
+
+#### 📤 导出设计 — 你的选择，你做主
+
+<div style="
+  background: rgba(0,0,0,0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+">
+
+| 选项 | 描述 |
+|:---:|:---|
+| 🔘 **纯净版** | 仅导出论文原文，无任何笔记 |
+| ✅ **完整版** | 笔记 + 读后总结，一并导出 |
+
+<p style="color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 16px; text-align: center;">
+  导出时，系统提供优雅的开关选项<br/>
+  既保留论文的原汁原味，又留住你的思考结晶
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+<br>
+
+<div align="center">
+
 ## 技术架构
 
 ```mermaid
