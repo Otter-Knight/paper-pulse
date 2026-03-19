@@ -1,13 +1,14 @@
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import FeedClient from "./feed-client";
 
-async function getPapers() {
+export async function GET() {
   try {
     const papers = await prisma.paper.findMany({
       orderBy: { publishedAt: "desc" },
-      take: 100,
+      take: 2000,
     });
-    return papers.map(p => ({
+
+    const formatted = papers.map(p => ({
       id: p.id,
       title: p.title,
       authors: p.authors,
@@ -20,13 +21,10 @@ async function getPapers() {
       publishedAt: p.publishedAt,
       createdAt: p.createdAt,
     }));
+
+    return NextResponse.json(formatted);
   } catch (error) {
     console.error("Error fetching papers:", error);
-    return [];
+    return NextResponse.json({ error: "Failed to fetch papers" }, { status: 500 });
   }
-}
-
-export default async function FeedPage() {
-  const papers = await getPapers();
-  return <FeedClient initialPapers={papers} />;
 }

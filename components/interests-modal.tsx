@@ -153,10 +153,6 @@ export function InterestsModal({
       sources,
       venues: allVenues,
     });
-    localStorage.setItem(
-      "paperPulse_preferences",
-      JSON.stringify({ keywords: allKeywords, authors: allAuthors, categories, timeRange, sources, venues: allVenues })
-    );
     onOpenChange(false);
   };
 

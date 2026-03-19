@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { FileText, ExternalLink, BookOpen, Bookmark, BookmarkCheck, BookOpenCheck, Zap } from "lucide-react";
+import { FileText, ExternalLink, BookOpen, Bookmark, BookmarkCheck, BookOpenCheck, Zap, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,16 +15,115 @@ interface PaperCardProps {
   index?: number;
 }
 
+// 翻译队列 - 限制并发请求数量
+interface TranslationTask {
+  title: string;
+  paperId: string;
+  resolve: (value: string | PromiseLike<string>) => void;
+}
+
+const translationQueue: TranslationTask[] = [];
+let isProcessingQueue = false;
+
+async function processTranslationQueue() {
+  if (isProcessingQueue || translationQueue.length === 0) return;
+  isProcessingQueue = true;
+
+  while (translationQueue.length > 0) {
+    const { title, paperId, resolve } = translationQueue.shift()!;
+    const cacheKey = `title_trans_${paperId}`;
+
+    // 检查缓存
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        resolve(cached);
+        continue;
+      }
+    }
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          paperTitle: title,
+          paperAbstract: "",
+          isTranslationRequest: true
+        })
+      });
+
+      const text = await response.text();
+      const translated = text.trim() || title;
+
+      // 缓存结果
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(cacheKey, translated);
+      }
+
+      resolve(translated);
+    } catch {
+      resolve(title);
+    }
+
+    // 请求间隔，避免同时发送太多
+    await new Promise(r => setTimeout(r, 100));
+  }
+
+  isProcessingQueue = false;
+}
+
+function translateTitle(title: string, paperId: string): Promise<string> {
+  return new Promise((resolve) => {
+    const cacheKey = `title_trans_${paperId}`;
+
+    // 检查缓存
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        resolve(cached);
+        return;
+      }
+    }
+
+    // 加入队列
+    translationQueue.push({ title, paperId, resolve });
+    processTranslationQueue();
+  });
+}
+
 export function PaperCard({ paper, index = 0 }: PaperCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [showZoneSelector, setShowZoneSelector] = useState(false);
+  const [translatedTitle, setTranslatedTitle] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
 
-  const { addToLibrary, removeFromLibrary, isInLibrary, isInZone } = useLibraryStore();
+  const { addToLibrary, removeFromLibrary, isInLibrary } = useLibraryStore();
 
   useEffect(() => {
     setIsSaved(isInLibrary(paper.id));
   }, [paper.id, isInLibrary]);
+
+  // 翻译标题 - 只在没有缓存时翻译
+  useEffect(() => {
+    const cachedKey = `title_trans_${paper.id}`;
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(cachedKey);
+      if (cached) {
+        setTranslatedTitle(cached);
+        return;
+      }
+    }
+
+    setTranslating(true);
+    translateTitle(paper.title, paper.id).then(translated => {
+      setTranslatedTitle(translated);
+      setTranslating(false);
+    }).catch(() => {
+      setTranslating(false);
+    });
+  }, [paper.title, paper.id]);
 
   const handleSaveToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -133,32 +232,23 @@ export function PaperCard({ paper, index = 0 }: PaperCardProps) {
           <h3 className="text-base font-semibold leading-snug group-hover:text-primary transition-colors line-clamp-2 mt-1">
             {paper.title}
           </h3>
+          {translatedTitle && (
+            <p className="text-sm text-muted-foreground leading-relaxed mt-1 line-clamp-2">
+              {translatedTitle}
+            </p>
+          )}
+          {translating && (
+            <p className="text-sm text-muted-foreground/60 mt-1 flex items-center gap-1">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              翻译中...
+            </p>
+          )}
         </Link>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
         <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
           {authorDisplay}
         </p>
-
-        <p className={`text-sm text-secondary-foreground leading-relaxed flex-1 ${expanded ? '' : 'line-clamp-3'}`}>
-          {paper.abstract ? (
-            expanded ? paper.abstract : truncateText(paper.abstract, 150)
-          ) : (
-            <span className="italic text-muted-foreground text-xs">No abstract available</span>
-          )}
-        </p>
-
-        {paper.abstract && paper.abstract.length > 150 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mt-2 h-7 px-2 text-xs self-start"
-            onClick={() => setExpanded(!expanded)}
-          >
-            <BookOpen className="h-3 w-3 mr-1" />
-            {expanded ? "Show less" : "Read more"}
-          </Button>
-        )}
 
         <div className="flex flex-wrap gap-1.5 mt-3">
           {paper.tags.slice(0, 3).map((tag) => (

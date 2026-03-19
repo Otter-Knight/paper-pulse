@@ -8,11 +8,12 @@ import { RelatedPapers } from "@/components/related-papers";
 import { useReadHistoryStore } from "@/lib/read-history";
 import { useLibraryStore, PaperZone } from "@/lib/library-store";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, FileText, Calendar, User, Tag, Bookmark, BookmarkCheck, BookOpenCheck, Zap } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Calendar, User, Tag, Bookmark, BookmarkCheck, BookOpenCheck, Zap, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDateShort } from "@/lib/utils";
+import { StarRating } from "@/components/star-rating";
 
 interface PaperPageClientProps {
   paper: Paper;
@@ -20,10 +21,12 @@ interface PaperPageClientProps {
 
 export function PaperPageClient({ paper }: PaperPageClientProps) {
   const { markAsRead } = useReadHistoryStore();
-  const { addToLibrary, removeFromLibrary, isInLibrary } = useLibraryStore();
+  const { addToLibrary, removeFromLibrary, isInLibrary, getPaperById, setStars, markAsRead: markPaperAsRead, setNoRecommend } = useLibraryStore();
   const [allPapers, setAllPapers] = useState<Paper[]>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [showZoneSelector, setShowZoneSelector] = useState(false);
+  const [savedPaper, setSavedPaper] = useState<{ stars: number; isRead: boolean; zone: string } | null>(null);
+  const [showReadDialog, setShowReadDialog] = useState(false);
 
   // Mark paper as read when viewed
   useEffect(() => {
@@ -33,7 +36,15 @@ export function PaperPageClient({ paper }: PaperPageClientProps) {
   // Check if paper is in library
   useEffect(() => {
     setIsSaved(isInLibrary(paper.id));
-  }, [paper.id, isInLibrary]);
+    const paperData = getPaperById(paper.id);
+    if (paperData) {
+      setSavedPaper({
+        stars: paperData.stars || 0,
+        isRead: paperData.isRead || false,
+        zone: paperData.zone || "deep"
+      });
+    }
+  }, [paper.id, isInLibrary, getPaperById]);
 
   // Load all papers for related papers
   useEffect(() => {
@@ -205,6 +216,37 @@ export function PaperPageClient({ paper }: PaperPageClientProps) {
                 )}
                 </div>
 
+                {/* Star Rating - Show when saved */}
+                {isSaved && savedPaper && (
+                  <div className="flex items-center justify-center gap-2 px-3 py-2 bg-accent rounded-md">
+                    <span className="text-xs text-foreground font-medium">评分</span>
+                    <StarRating
+                      stars={savedPaper.stars}
+                      onChange={(stars) => {
+                        setStars(paper.id, stars);
+                        setSavedPaper({ ...savedPaper, stars });
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* 已读完 Button */}
+                {isSaved && savedPaper && !savedPaper.isRead && (
+                  <button
+                    onClick={() => setShowReadDialog(true)}
+                    className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded-md bg-green-100 text-green-700 hover:bg-green-200 transition-colors text-xs font-medium"
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                    已读完
+                  </button>
+                )}
+                {isSaved && savedPaper?.isRead && (
+                  <div className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded-md bg-green-600 text-white text-xs font-medium">
+                    <Check className="h-3.5 w-3.5" />
+                    已读完
+                  </div>
+                )}
+
                 {paper.pdfUrl && (
                   <a
                     href={paper.pdfUrl}
@@ -249,6 +291,67 @@ export function PaperPageClient({ paper }: PaperPageClientProps) {
           </div>
         </div>
       </div>
+
+      {/* Read Dialog - Fixed overlay outside card */}
+      {showReadDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+          <div className="bg-background rounded-lg p-4 w-80 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-semibold mb-3">将论文移动到?</h3>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  markPaperAsRead(paper.id, "read");
+                  setShowReadDialog(false);
+                  setSavedPaper({ ...savedPaper!, isRead: true, zone: "read" });
+                }}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent rounded-md text-left"
+              >
+                <Check className="h-4 w-4 text-green-500" />
+                已读完文献库
+              </button>
+              <button
+                onClick={() => {
+                  markPaperAsRead(paper.id, "deep");
+                  setShowReadDialog(false);
+                  setSavedPaper({ ...savedPaper!, isRead: true, zone: "deep" });
+                }}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent rounded-md text-left"
+              >
+                <BookOpenCheck className="h-4 w-4 text-amber-500" />
+                留在精读区
+              </button>
+              <button
+                onClick={() => {
+                  markPaperAsRead(paper.id, "quick");
+                  setShowReadDialog(false);
+                  setSavedPaper({ ...savedPaper!, isRead: true, zone: "quick" });
+                }}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent rounded-md text-left"
+              >
+                <Zap className="h-4 w-4 text-blue-500" />
+                留在速读区
+              </button>
+              <button
+                onClick={() => {
+                  setNoRecommend(paper.id);
+                  setShowReadDialog(false);
+                }}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent rounded-md text-left text-red-500"
+              >
+                <span className="text-lg">×</span>
+                不再推荐
+              </button>
+            </div>
+            <button
+              onClick={() => setShowReadDialog(false)}
+              className="mt-3 w-full px-3 py-2 text-sm border rounded-md hover:bg-accent"
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

@@ -3,32 +3,41 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useLibraryStore, SavedPaper, PaperZone } from "@/lib/library-store";
-import { FileText, Trash2, ExternalLink, Calendar, StickyNote, BookOpenCheck, Zap, ArrowRight } from "lucide-react";
+import { FileText, Trash2, ExternalLink, Calendar, StickyNote, BookOpenCheck, Zap, ArrowRight, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+type SortOption = "time" | "stars";
 
 export default function LibraryPage() {
   const { savedPapers, removeFromLibrary, moveToZone } = useLibraryStore();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<PaperZone | "all">("deep");
+  const [sortOption, setSortOption] = useState<SortOption>("time");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Sort by saved date (most recent first)
-  const sortedPapers = [...savedPapers].sort(
-    (a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime()
-  );
+  // Sort papers
+  const sortedPapers = [...savedPapers].sort((a, b) => {
+    if (sortOption === "stars") {
+      return (b.stars || 0) - (a.stars || 0);
+    }
+    return new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime();
+  });
 
   // Filter by zone
   const deepPapers = sortedPapers.filter((p) => p.zone === "deep");
   const quickPapers = sortedPapers.filter((p) => p.zone === "quick");
+  const readPapers = sortedPapers.filter((p) => p.zone === "read");
 
   const displayedPapers = activeTab === "all"
     ? sortedPapers
     : activeTab === "deep"
       ? deepPapers
-      : quickPapers;
+      : activeTab === "quick"
+        ? quickPapers
+        : readPapers;
 
   if (!mounted) {
     return (
@@ -87,6 +96,20 @@ export default function LibraryPage() {
           </span>
         </button>
         <button
+          onClick={() => setActiveTab("read")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-t-md transition-colors ${
+            activeTab === "read"
+              ? "bg-green-500/10 text-green-600 border-b-2 border-green-500"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Check className="h-4 w-4" />
+          已读完
+          <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">
+            {readPapers.length}
+          </span>
+        </button>
+        <button
           onClick={() => setActiveTab("all")}
           className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-t-md transition-colors ${
             activeTab === "all"
@@ -99,6 +122,28 @@ export default function LibraryPage() {
             {savedPapers.length}
           </span>
         </button>
+
+        {/* Sort Options */}
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">排序:</span>
+          <button
+            onClick={() => setSortOption("time")}
+            className={`px-2 py-1 text-xs rounded transition-colors ${
+              sortOption === "time" ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+            }`}
+          >
+            收藏顺序
+          </button>
+          <button
+            onClick={() => setSortOption("stars")}
+            className={`px-2 py-1 text-xs rounded transition-colors flex items-center gap-1 ${
+              sortOption === "stars" ? "bg-primary text-primary-foreground" : "hover:bg-accent"
+            }`}
+          >
+            <Star className="h-3 w-3" />
+            星星数
+          </button>
+        </div>
       </div>
 
       {displayedPapers.length === 0 ? (
@@ -107,7 +152,7 @@ export default function LibraryPage() {
             <FileText className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-lg font-medium mb-2">
-            {activeTab === "deep" ? "精读区暂无论文" : activeTab === "quick" ? "速读区暂无论文" : "还没有收藏任何论文"}
+            {activeTab === "deep" ? "精读区暂无论文" : activeTab === "quick" ? "速读区暂无论文" : activeTab === "read" ? "已读完区暂无论文" : "还没有收藏任何论文"}
           </h3>
           <p className="text-muted-foreground mb-4">
             {activeTab === "all" ? "从每日论文流中收藏论文来构建你的文库" : "点击收藏按钮并选择区域来添加论文"}
@@ -157,6 +202,21 @@ export default function LibraryPage() {
                     <h3 className="font-semibold hover:text-primary transition-colors line-clamp-1">
                       {paper.title}
                     </h3>
+                    {/* Stars display */}
+                    {(paper.stars || 0) > 0 && (
+                      <div className="flex items-center gap-0.5 mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3 w-3 ${
+                              star <= (paper.stars || 0)
+                                ? "fill-amber-400 text-amber-400"
+                                : "fill-transparent text-muted-foreground"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </Link>
 
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
