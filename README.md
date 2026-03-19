@@ -484,6 +484,89 @@ npm run dev
 
 <div align="center">
 
+## Deployment
+
+</div>
+
+### Option 1: Vercel (Recommended)
+
+```bash
+# Method 1: Vercel CLI
+npm i -g vercel
+vercel
+
+# Method 2: GitHub Integration
+# 1. Fork this repository
+# 2. Go to https://vercel.com/new
+# 3. Import your forked repository
+# 4. Configure environment variables (see below)
+# 5. Deploy
+```
+
+### Option 2: Local Development
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Otter-Knight/paper-pulse.git
+cd paper-pulse
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment variables
+cp .env.example .env
+# Edit .env with your configuration (see Environment Variables below)
+
+# 4. Initialize database
+npx prisma generate
+npx prisma db push
+
+# 5. Start development server
+npm run dev
+# Visit http://localhost:3000
+```
+
+### Option 3: Docker
+
+```bash
+# Build and run
+docker build -t paper-pulse .
+docker run -p 3000:3000 --env-file .env paper-pulse
+```
+
+### Environment Variables
+
+| Variable | Required | Description | How to Get |
+|----------|----------|-------------|------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase Project URL | Supabase Dashboard → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase Anonymous Key | Supabase Dashboard → Settings → API |
+| `DATABASE_URL` | Yes | PostgreSQL Connection String | Supabase Dashboard → Settings → Database |
+| `OPENAI_API_KEY` | Yes | SiliconFlow API Key | [SiliconFlow](https://siliconflow.cn) → API Keys |
+| `CRON_SECRET` | Yes | Cron job security token | Generate a random string |
+| `USE_MOCK_DATA` | No | Use mock data (set `"true"` for development) | Default: `"false"` |
+
+#### Getting Supabase Credentials
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Go to **Settings** → **API**
+3. Copy **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+4. Copy **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Go to **Settings** → **Database**
+6. Copy **Connection String** → `DATABASE_URL`
+
+#### Getting SiliconFlow API Key
+
+1. Register at [siliconflow.cn](https://siliconflow.cn)
+2. Go to **API Keys**
+3. Create a new API key
+4. Copy to `OPENAI_API_KEY`
+
+---
+
+<br>
+
+<div align="center">
+
 ## Embark on Your Research Journey
 
 <div style="
